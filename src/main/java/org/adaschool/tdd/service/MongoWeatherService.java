@@ -51,6 +51,7 @@ public class MongoWeatherService
     @Override
     public List<WeatherReport> findWeatherReportsByName( String reporter )
     {
-        return null;
+
+        return repository.findByReporter(reporter);
     }
 }
