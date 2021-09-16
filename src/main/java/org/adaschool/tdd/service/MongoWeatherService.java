@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MongoWeatherService
@@ -38,7 +39,10 @@ public class MongoWeatherService
     @Override
     public List<WeatherReport> findNearLocation( GeoLocation geoLocation, float distanceRangeInMeters )
     {
-        return null;
+        return repository.findAll()
+                .stream()
+                .filter(weather -> Math.sqrt(Math.pow((geoLocation.getLat()-weather.getGeoLocation().getLat()),2)+Math.pow((geoLocation.getLng()-weather.getGeoLocation().getLng()),2)) <= distanceRangeInMeters)
+                .collect(Collectors.toList());
     }
 
     @Override

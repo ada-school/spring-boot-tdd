@@ -7,12 +7,10 @@ import org.adaschool.tdd.repository.document.GeoLocation;
 import org.adaschool.tdd.repository.document.WeatherReport;
 import org.adaschool.tdd.service.MongoWeatherService;
 import org.adaschool.tdd.service.WeatherService;
-import org.adaschool.tdd.util.WeatherReportMapper;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
@@ -23,6 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 @TestInstance( TestInstance.Lifecycle.PER_CLASS )
 class MongoWeatherServiceTest
 {
@@ -31,7 +30,7 @@ class MongoWeatherServiceTest
     @Mock
     WeatherReportRepository repository;
 
-    @BeforeAll()
+    @BeforeEach
     public void setup()
     {
         weatherService = new MongoWeatherService( repository );
@@ -44,8 +43,6 @@ class MongoWeatherServiceTest
         double lng = 74.0721;
         GeoLocation location = new GeoLocation( lat, lng );
         WeatherReportDto weatherReportDto = new WeatherReportDto( location, 35f, 22f, "tester", new Date() );
-        WeatherReport weatherReport = WeatherReportMapper.mapToWeatherReport(weatherReportDto);
-        when(repository.save(weatherReport)).thenReturn(weatherReport);
         weatherService.report( weatherReportDto );
         verify( repository ).save( any( WeatherReport.class ) );
     }
