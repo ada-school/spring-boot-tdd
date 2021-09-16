@@ -53,7 +53,7 @@ public class WeatherReport
         return reporter;
     }
 
-    public Date getCreated()
+    public Date getCreatedAt()
     {
         return created;
     }

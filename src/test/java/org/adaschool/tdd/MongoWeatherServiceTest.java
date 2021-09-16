@@ -7,6 +7,7 @@ import org.adaschool.tdd.repository.document.GeoLocation;
 import org.adaschool.tdd.repository.document.WeatherReport;
 import org.adaschool.tdd.service.MongoWeatherService;
 import org.adaschool.tdd.service.WeatherService;
+import org.adaschool.tdd.util.WeatherReportMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,8 @@ class MongoWeatherServiceTest
         double lng = 74.0721;
         GeoLocation location = new GeoLocation( lat, lng );
         WeatherReportDto weatherReportDto = new WeatherReportDto( location, 35f, 22f, "tester", new Date() );
+        WeatherReport weatherReport = WeatherReportMapper.mapToWeatherReport(weatherReportDto);
+        when(repository.save(weatherReport)).thenReturn(weatherReport);
         weatherService.report( weatherReportDto );
         verify( repository ).save( any( WeatherReport.class ) );
     }
@@ -65,9 +68,7 @@ class MongoWeatherServiceTest
     {
         String weatherReportId = "dsawe1fasdasdoooq123";
         when( repository.findById( weatherReportId ) ).thenReturn( Optional.empty() );
-        Assertions.assertThrows( WeatherReportNotFoundException.class, () -> {
-            weatherService.findById( weatherReportId );
-        } );
+        Assertions.assertThrows( WeatherReportNotFoundException.class, () -> weatherService.findById( weatherReportId ));
     }
 
 }
